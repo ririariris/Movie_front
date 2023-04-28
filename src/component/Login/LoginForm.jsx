@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button, Container, Input } from "./LoginForm.styled";
+import { ServerApi } from "../../api/ServerApi";
 
 const LoginForm = () => {
-  const [user, setUser] = useState("");
-  const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,15 +18,16 @@ const LoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.get(`http://localhost:3000/info`, {
-        id,
-        pw,
+      const response = await axios.post(`${ServerApi}/login/`, {
+        username,
+        password,
       });
-      console.log(user);
       console.log(response);
       alert("로그인 성공");
       navigate("/home");
-      localStorage.setItem("id", response.user.id);
+      localStorage.setItem("id", response.data.username);
+      localStorage.setItem("name", response.data.name);
+      // localStorage.setItem("username", response.data.name);
     } catch (error) {
       alert("아이디나 비밀번호를 다시 확인해주세요.");
       console.log(error);
@@ -40,16 +41,16 @@ const LoginForm = () => {
           type="text"
           placeholder="아이디"
           style={{ marginBottom: "10px" }}
-          value={id}
-          onChange={(e) => setId(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <br />
         <Input
           type="password"
           placeholder="비밀번호"
-          value={pw}
-          onChange={(e) => setPw(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
         <br />

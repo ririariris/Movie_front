@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Container,
-  Form,
-  Input,
-  Warning,
-} from "../Login/LoginForm.styled";
+import { Button, Container, Input, Warning } from "../Login/LoginForm.styled";
 import axios from "axios";
+import { ServerApi } from "../../api/ServerApi";
 
 const SignForm = () => {
   const navigate = useNavigate();
-  const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
-  const [confirmPw, setConfirmPw] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
   const [idOk, setIdOk] = useState(false);
-  const [pwOk, setPwOk] = useState(false);
+  const [passwordOk, setPasswordOk] = useState(false);
 
   const containsSpecialCharacter = (pw) => {
     const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
@@ -31,27 +27,28 @@ const SignForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // if (!containsSpecialCharacter(pw)) {
-    //   alert("비밀번호에는 최소 1개의 특수 문자가 포함되어야 합니다.");
-    //   return;
-    // }
+    if (!containsSpecialCharacter(password)) {
+      alert("비밀번호에는 최소 1개의 특수 문자가 포함되어야 합니다.");
+      return;
+    }
 
-    if (pw !== confirmPw) {
+    if (password !== confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
     try {
-      const response = await axios.post(`http://localhost:3000/login`, {
-        id,
-        pw,
+      const response = await axios.post(`${ServerApi}/signup/`, {
+        username,
+        password,
+        name,
       });
       alert("회원가입 성공");
       console.log(response);
       navigate("/");
     } catch (error) {
       console.log(error);
-      if (error.response.name === "Username already registered") {
+      if (error.response.data.detail === "Username already registered") {
         alert("아이디가 이미 존재합니다.");
       }
     }
@@ -66,9 +63,9 @@ const SignForm = () => {
             type="text"
             style={{ marginBottom: "10px" }}
             placeholder="아이디"
-            value={id}
+            value={username}
             onChange={(e) => {
-              setId(e.target.value);
+              setUsername(e.target.value);
             }}
             required
           />
@@ -76,18 +73,18 @@ const SignForm = () => {
           <Input
             type="password"
             placeholder="비밀번호"
-            value={pw}
+            value={password}
             onChange={(e) => {
-              setPw(e.target.value);
-              // if (containsSpecialCharacter(e.target.value)) {
-              //   setPwOk(true);
-              // } else {
-              //   setPwOk(false);
-              // }
+              setPassword(e.target.value);
+              if (containsSpecialCharacter(e.target.value)) {
+                setPasswordOk(true);
+              } else {
+                setPasswordOk(false);
+              }
             }}
             required
           />
-          {!pwOk ? (
+          {!passwordOk ? (
             <Warning> 반드시 특수문자 1개 이상 포함해야 합니다.</Warning>
           ) : (
             <div style={{ marginBottom: "10px" }} />
@@ -96,8 +93,17 @@ const SignForm = () => {
           <Input
             type="password"
             placeholder="비밀번호 확인"
-            value={confirmPw}
-            onChange={(e) => setConfirmPw(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <br />
+          <Input
+            style={{ marginTop: "10px" }}
+            type="text"
+            placeholder="닉네임"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
           <br />

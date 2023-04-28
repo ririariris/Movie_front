@@ -75,13 +75,13 @@ export const Home = styled.span`
   }
 `;
 
-export const Menu = styled.ul`
+export const Menu = styled.div`
   display: flex;
   justify-content: center;
   list-style: none;
   margin: 0;
 `;
 
-export const Menulist = styled.li`
-  margin: 0 10px;
+export const Logo = styled.div`
+  margin-left: 10px;
 `;

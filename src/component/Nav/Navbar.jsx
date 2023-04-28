@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import LOGOIMG from "../../images/logo192.png";
 import {
   Button,
   ClickUser,
   Home,
+  Logo,
   Menu,
   Menulist,
   Nav,
@@ -41,11 +43,24 @@ const Navbar = () => {
 
   return (
     <Nav>
+      <Logo>
+        <img
+          src={LOGOIMG}
+          alt={"logo"}
+          style={{ width: "50px", height: "50px" }}
+        />
+      </Logo>
       <NavButtons>
         <Menu>
-          <Menulist>Movies</Menulist>
-          <Menulist>Top10</Menulist>
-          <Menulist>MyPage</Menulist>
+          <Link style={{ textDecoration: "none" }} to="/Movies">
+            <Button>Movies</Button>
+          </Link>
+          <Link style={{ textDecoration: "none" }} to="/Top10">
+            <Button>Top10</Button>
+          </Link>
+          <Link style={{ textDecoration: "none" }} to="/MyPage">
+            <Button>MyPage</Button>
+          </Link>
         </Menu>
       </NavButtons>
       <div>
@@ -68,7 +83,7 @@ const Navbar = () => {
                 Home
               </Home>
               <UserName onClick={UserInfo}>
-                {localStorage.getItem("id")}
+                {localStorage.getItem("name")}
               </UserName>
               {clickUser && (
                 <ClickUser>
